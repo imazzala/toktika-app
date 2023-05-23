@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tok_tik/config/theme/app_theme.dart';
+import 'package:tok_tik/infrastructure/respositories/video_posts_repository_impl.dart';
 import 'package:tok_tik/presentation/providers/discover_provider.dart';
 import 'package:tok_tik/presentation/screens/discover/discover_screen.dart';
+import 'package:tok_tik/infrastructure/datasources/local_video_datasource_impl.dart';
 
 void main() => runApp(const MyApp());
 
@@ -11,11 +13,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final videosPostRepository =
+        VideoPostsRepositoryImpl(videosDatasource: LocalVideoDatasource());
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           lazy: false,
-          create: (_) => DiscoverProvider()..loadNextPage(),
+          create: (_) => DiscoverProvider(videosPostRepository)..loadNextPage(),
         )
       ],
       child: MaterialApp(
